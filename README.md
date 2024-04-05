@@ -4,8 +4,8 @@ main.py and main2.py are the main files to run the program.
 test.py and test2.py are the files with some testable equation.
 
 There are two solution methods.
-1. main.py and test.py have the same solution method.
-2. main2.py and test2.py have the same solution method.
+1. main.py and test.py have the same solution method.(not working)
+2. main2.py and test2.py have the same solution method.(recomended to use)
 
 
 How to write chemical equation:
