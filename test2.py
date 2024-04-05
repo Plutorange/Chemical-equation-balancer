@@ -1,4 +1,5 @@
 def analyze():  # gives reactants and products
+    reactants, products = [], []
     for i in range(len(equation)):
         for j in equation[i]:
             if i == 0:
@@ -34,11 +35,11 @@ def analyze():  # gives reactants and products
                 reactants[-1].update({elem: max(1, int(n)) * scobe})
             elif i == 1:
                 products[-1].update({elem: max(1, int(n)) * scobe})
+    return reactants, products
 
 
-def solve():
-    system = ['']
-    count = 0
+def solve():  # create indices
+    system, count = [''], 0
     for i in range(len(elements)):
         for j in range(len(elements[i])):
             for k in elements[i][j]:
@@ -62,17 +63,19 @@ def solve():
                         for f in range(1, bool(count // 6) * 10 + 2):
                             for g in range(1, bool(count // 7) * 10 + 2):
                                 for h in range(1, bool(count // 8) * 10 + 2):
-                                    n = 0
+                                    n, ind = 0, [a, b, c, d, e, f, g, h]
                                     for i in system:
                                         if eval(i):
                                             n += 1
                                     if n == len(system):
-                                        return [a, b, c, d, e, f, g, h]
+                                        for i in range(len(ind)):
+                                            if ind[i] == 1:
+                                                ind[i] = ''
+                                        return ind
 
 
 def fin_equation():  # create final balanced equation
-    balanced_equation = ''
-    c = 0
+    balanced_equation, c = '', 0
     for i in range(len(elements)):
         for j in range(len(elements[i])):
             if i == 1 and j == 0:
@@ -85,25 +88,19 @@ def fin_equation():  # create final balanced equation
 
 
 def balancer():  # create balanced equation
-    global equation, indices, reactants, products, elements
+    global equation, elements, indices
     ex = ['C + O2 = CO2',  # YES
           'H2 + O2 = H2O',  # YES
           'P4O10 + H2O = H3PO4',  # YES
           'Na3PO4 + MgCl2 = NaCl + Mg3(PO4)2',  # YES
           'ZnS + O2 = ZnO + SO2',  # YES
           'Fe3O4 + CO = FeO + CO2',  # YES
-          'PCl5 + H20 = H3PO4 + HCl']
+          'PCl5 + H2O = H3PO4 + HCl']
     for eq in ex:
-        equation = eq.split(' = ')
-        equation = [i.split(' + ') for i in equation]
-        reactants, products = [], []
-        analyze()
-        elements = reactants, products
-        indices = solve()
-        for i in range(len(indices)):
-            if indices[i] == 1:
-                indices[i] = ''
-        result = fin_equation()
+        equation = [i.split(' + ') for i in eq.split(' = ')]
+        elements = analyze()  # Formatting equation into more convenient form
+        indices = solve()  # Create indices using a system of linear equations
+        result = fin_equation()  # Combine indices with the original equation
         print('-' * 12, eq, result, '-' * 12, sep='\n')
 
 
