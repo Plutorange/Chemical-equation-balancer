@@ -1,3 +1,6 @@
+import sys
+
+
 def analyze():  # gives reactants and products
     reactants, products = [], []
     for i in range(len(equation)):
@@ -38,40 +41,74 @@ def analyze():  # gives reactants and products
     return reactants, products
 
 
-def solve():  # create indices
-    system, count = [''], 0
+def create_system():  # create system of equation
+    system, count = {}, 0
     for i in range(len(elements)):
         for j in range(len(elements[i])):
             for k in elements[i][j]:
-                c = 0
-                for q in range(len(system)):
-                    if k in system[q]:
-                        if i == 1 and '=' not in system[q]:
-                            system[q] += f'=={chr(ord("a") + count)}*{elements[i][j][k]}'
-                        else:
-                            system[q] += f'+{chr(ord("a") + count)}*{elements[i][j][k]}'
-                        c = 1
-                if c == 0:
-                    system.append(f'{k} {chr(ord("a") + count)}*{elements[i][j][k]}')
+                if k in system:
+                    if i == 1:
+                        system[k] += f'-{chr(ord("a") + count)}*{elements[i][j][k]}'
+                    else:
+                        system[k] += f'+{chr(ord("a") + count)}*{elements[i][j][k]}'
+                else:
+                    system[k] = ''
+                    for n in range(count):
+                        system[k] = f'{chr(ord("a") + n)}*0+'
+                    system[k] += f'{chr(ord("a") + count)}*{elements[i][j][k]}'
+            for k in system:
+                if chr(ord("a") + count) not in system[k]:
+                    system[k] += f'+{chr(ord("a") + count)}*0'
             count += 1
-    system = [i.split(' ')[1] for i in system[1:]]
-    for a in range(1, 12):
-        for b in range(1, 12):
-            for c in range(1, bool(count // 3) * 10 + 2):
-                for d in range(1, bool(count // 4) * 10 + 2):
-                    for e in range(1, bool(count // 5) * 10 + 2):
-                        for f in range(1, bool(count // 6) * 10 + 2):
-                            for g in range(1, bool(count // 7) * 10 + 2):
-                                for h in range(1, bool(count // 8) * 10 + 2):
-                                    n, ind = 0, [a, b, c, d, e, f, g, h]
-                                    for i in system:
-                                        if eval(i):
-                                            n += 1
-                                    if n == len(system):
-                                        for i in range(len(ind)):
-                                            if ind[i] == 1:
-                                                ind[i] = ''
-                                        return ind
+    return system
+
+
+def create_matrix():
+    mt = []
+    for i in system:
+        mt.append([])
+        for j in range(len(system[i])):
+            if system[i][j].isdigit() and system[i][j - 1] == '*':
+                mt[-1].append(int(system[i][j]))
+            elif system[i][j].isdigit():
+                mt[-1][-1] = mt[-1][-1] * 10 + int(system[i][j])
+    return mt
+
+
+def solve():
+    ind, stage, pos = ['' for _ in range(len(equation[0]) + len(equation[1]) - 1)] + [1], 0, []
+    for i in range(len(matrix[0]) - 1):
+        c = None
+        for j in range(len(matrix)):  # create main diagonal
+            if matrix[j][stage] and j not in pos:
+                p = matrix[j][stage]
+                for k in range(len(matrix[j])):
+                    matrix[j][k] /= p
+                c = matrix[j]
+                pos.append(j)
+                break
+        for j in range(len(matrix)):  # remove zeros below diagonal 1
+            if matrix[j][stage] and matrix[j] != c:
+                p = (0 - matrix[j][stage]) / c[stage]
+                for k in range(len(matrix[j])):
+                    matrix[j][k] += c[k] * p
+        stage += 1
+    for stage in range(len(ind) - 1):
+        for i in range(len(matrix)):
+            if matrix[i][stage]:
+                ind[stage] = matrix[i][-1]
+                break
+    for i in ind:
+        if type(i) == float and round(i, 4) % 1 != 0:
+            p = int(1 / round(i % 1, 4))
+            for j in range(len(ind)):
+                ind[j] *= p
+    for i in range(len(ind)):
+        if type(ind[i]) == float:
+            ind[i] = abs(int(ind[i]))
+        if ind[i] == 1 or ind[i] == 0:
+            ind[i] = ''
+    return ind
 
 
 def fin_equation():  # create final balanced equation
@@ -88,18 +125,25 @@ def fin_equation():  # create final balanced equation
 
 
 def balancer():  # create balanced equation
-    global equation, elements, indices
+    global equation, elements, indices, system, matrix
     ex = ['C + O2 = CO2',  # YES
           'H2 + O2 = H2O',  # YES
           'P4O10 + H2O = H3PO4',  # YES
           'Na3PO4 + MgCl2 = NaCl + Mg3(PO4)2',  # YES
           'ZnS + O2 = ZnO + SO2',  # YES
           'Fe3O4 + CO = FeO + CO2',  # YES
-          'PCl5 + H2O = H3PO4 + HCl']
+          'PCl5 + H2O = H3PO4 + HCl',  # YES
+          'CuCO3 + H2SO4 = CuSO4 + H2O + CO2'  # YES
+          ]
     for eq in ex:
+        if ' = ' not in eq and ' + ' not in eq:
+            print('Invalid input')
+            sys.exit()
         equation = [i.split(' + ') for i in eq.split(' = ')]
         elements = analyze()  # Formatting equation into more convenient form
-        indices = solve()  # Create indices using a system of linear equations
+        system = create_system()  # Create indices using a system of linear equations
+        matrix = create_matrix()
+        indices = solve()
         result = fin_equation()  # Combine indices with the original equation
         print('-' * 12, eq, result, '-' * 12, sep='\n')
 
