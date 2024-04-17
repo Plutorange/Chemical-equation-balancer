@@ -13,8 +13,9 @@ How to write chemical equation:
 Only the first letter of the element should be capitalized:
 He, Li, Be, Ne, Na, Mg
 
-Template:
-(reactant 1) + (reactant 2) + ... + (reactant n) = (product 1) + (product 2) + ... + (product n)
+You do not need to write coefficients.
+You must write the subscript as a regular number (without parentheses) to the right of the element:
+H2, O2, CO2
 
 Example:
 Na3PO4 + MgCl2 = NaCl + Mg3(PO4)2
