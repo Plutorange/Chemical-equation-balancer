@@ -129,7 +129,7 @@ def balancer():  # create balanced equation
     print('How to write chemical equation:\n')
     print('Only the first letter of the element should be capitalized:')
     print('He, Li, Be, Ne, Na, Mg\n')
-    print('You do not need to write coefficients,')
+    print('You do not need to write coefficients.')
     print('You must write the subscript as a regular number '
           '(without parentheses) to the right of the element:')
     print('H2, O2, CO2\n')
@@ -141,9 +141,9 @@ def balancer():  # create balanced equation
         sys.exit()
     equation = [i.split(' + ') for i in eq.split(' = ')]
     elements = analyze()  # Formatting equation into more convenient form
-    system = create_system()  # Create indices using a system of linear equations
-    matrix = create_matrix()
-    indices = solve()
+    system = create_system()  # Create system of linear equations
+    matrix = create_matrix()  # Create matrix from system of linear equations
+    indices = solve()  # Get indices by solving the matrix
     result = fin_equation()  # Combine indices with the original equation
     print(result)
 
