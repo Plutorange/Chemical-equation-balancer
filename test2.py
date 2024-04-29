@@ -25,19 +25,31 @@ def analyze():  # gives reactants and products
                     if elem == '':
                         elem = k
                     elif i == 0:
-                        reactants[-1].update({elem: max(1, int(n)) * scobe})
+                        if elem in reactants[-1]:
+                            reactants[-1][elem] += max(1, int(n)) * scobe
+                        else:
+                            reactants[-1].update({elem: max(1, int(n)) * scobe})
                         elem, n = k, '0'
                     elif i == 1:
-                        products[-1].update({elem: max(1, int(n)) * scobe})
+                        if elem in products[-1]:
+                            products[-1][elem] += max(1, int(n)) * scobe
+                        else:
+                            products[-1].update({elem: max(1, int(n)) * scobe})
                         elem, n = k, '0'
                 elif k.isalpha():
                     elem += k
                 elif k.isdigit():
                     n += k
             if i == 0:
-                reactants[-1].update({elem: max(1, int(n)) * scobe})
+                if elem in reactants[-1]:
+                    reactants[-1][elem] += max(1, int(n)) * scobe
+                else:
+                    reactants[-1].update({elem: max(1, int(n)) * scobe})
             elif i == 1:
-                products[-1].update({elem: max(1, int(n)) * scobe})
+                if elem in products[-1]:
+                    products[-1][elem] += max(1, int(n)) * scobe
+                else:
+                    products[-1].update({elem: max(1, int(n)) * scobe})
     return reactants, products
 
 
@@ -126,15 +138,16 @@ def fin_equation():  # create final balanced equation
 
 def balancer():  # create balanced equation
     global equation, elements, indices, system, matrix
-    ex = ['C + O2 = CO2',  # YES
-          'H2 + O2 = H2O',  # YES
-          'P4O10 + H2O = H3PO4',  # YES
-          'Na3PO4 + MgCl2 = NaCl + Mg3(PO4)2',  # YES
-          'ZnS + O2 = ZnO + SO2',  # YES
-          'Fe3O4 + CO = FeO + CO2',  # YES
-          'PCl5 + H2O = H3PO4 + HCl',  # YES
-          'CuCO3 + H2SO4 = CuSO4 + H2O + CO2'  # YES
-          ]
+    ex = ['C + O2 = CO2',
+          'H2 + O2 = H2O',
+          'P4O10 + H2O = H3PO4',
+          'Na3PO4 + MgCl2 = NaCl + Mg3(PO4)2',
+          'ZnS + O2 = ZnO + SO2',
+          'Fe3O4 + CO = FeO + CO2',
+          'PCl5 + H2O = H3PO4 + HCl',
+          'CuCO3 + H2SO4 = CuSO4 + H2O + CO2',
+          'Al2(SO4)3 + Ca(OH)2 = Al(OH)3 + CaSO4',
+          'CH3OH = CH3OCH3 + H2O']
     for eq in ex:
         if ' = ' not in eq and ' + ' not in eq:
             print('Invalid input')
