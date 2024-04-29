@@ -25,19 +25,31 @@ def analyze():  # gives reactants and products
                     if elem == '':
                         elem = k
                     elif i == 0:
-                        reactants[-1].update({elem: max(1, int(n)) * scobe})
+                        if elem in reactants[-1]:
+                            reactants[-1][elem] += max(1, int(n)) * scobe
+                        else:
+                            reactants[-1].update({elem: max(1, int(n)) * scobe})
                         elem, n = k, '0'
                     elif i == 1:
-                        products[-1].update({elem: max(1, int(n)) * scobe})
+                        if elem in products[-1]:
+                            products[-1][elem] += max(1, int(n)) * scobe
+                        else:
+                            products[-1].update({elem: max(1, int(n)) * scobe})
                         elem, n = k, '0'
                 elif k.isalpha():
                     elem += k
                 elif k.isdigit():
                     n += k
             if i == 0:
-                reactants[-1].update({elem: max(1, int(n)) * scobe})
+                if elem in reactants[-1]:
+                    reactants[-1][elem] += max(1, int(n)) * scobe
+                else:
+                    reactants[-1].update({elem: max(1, int(n)) * scobe})
             elif i == 1:
-                products[-1].update({elem: max(1, int(n)) * scobe})
+                if elem in products[-1]:
+                    products[-1][elem] += max(1, int(n)) * scobe
+                else:
+                    products[-1].update({elem: max(1, int(n)) * scobe})
     return reactants, products
 
 
@@ -140,10 +152,15 @@ def balancer():  # create balanced equation
         print('Invalid input')
         sys.exit()
     equation = [i.split(' + ') for i in eq.split(' = ')]
+    print(equation)
     elements = analyze()  # Formatting equation into more convenient form
+    print(elements)
     system = create_system()  # Create system of linear equations
+    print(system)
     matrix = create_matrix()  # Create matrix from system of linear equations
+    print(matrix)
     indices = solve()  # Get indices by solving the matrix
+    print(indices)
     result = fin_equation()  # Combine indices with the original equation
     print(result)
 
