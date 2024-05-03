@@ -152,15 +152,10 @@ def balancer():  # create balanced equation
         print('Invalid input')
         sys.exit()
     equation = [i.split(' + ') for i in eq.split(' = ')]
-    print(equation)
     elements = analyze()  # Formatting equation into more convenient form
-    print(elements)
     system = create_system()  # Create system of linear equations
-    print(system)
     matrix = create_matrix()  # Create matrix from system of linear equations
-    print(matrix)
     indices = solve()  # Get indices by solving the matrix
-    print(indices)
     result = fin_equation()  # Combine indices with the original equation
     print(result)
 
