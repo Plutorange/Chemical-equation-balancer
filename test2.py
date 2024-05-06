@@ -1,73 +1,50 @@
 import sys
 
 
-def analyze():  # gives reactants and products
-    reactants, products = [], []
+def update(group, elem, n, scobe, new_elem=''):  # used in analyze() to shorten the code
+    if elem in group[-1]:
+        group[-1][elem] += max(1, int(n)) * scobe
+    else:
+        group[-1][elem] = max(1, int(n)) * scobe
+    return group, new_elem, '0'
+
+
+def analyze(equation):  # gives reactants and products
+    elements = [[], []]
     for i in range(len(equation)):
         for j in equation[i]:
-            if i == 0:
-                reactants.append({})
-            else:
-                products.append({})
+            elements[i].append({})
             elem, n, scobe = '', '0', 1
             for k in j:
                 if k == '(':
+                    elements[i], elem, n = update(elements[i], elem, n, scobe)
                     scobe = int(j[j.find(')') + 1:])
-                    if i == 0:
-                        reactants[-1].update({elem: max(1, int(n))})
-                        elem, n = '', '0'
-                    else:
-                        products[-1].update({elem: max(1, int(n))})
-                        elem, n = '', '0'
                 elif k == ')':
                     break
                 elif k.isalpha() and k == k.capitalize():
                     if elem == '':
                         elem = k
-                    elif i == 0:
-                        if elem in reactants[-1]:
-                            reactants[-1][elem] += max(1, int(n)) * scobe
-                        else:
-                            reactants[-1].update({elem: max(1, int(n)) * scobe})
-                        elem, n = k, '0'
-                    elif i == 1:
-                        if elem in products[-1]:
-                            products[-1][elem] += max(1, int(n)) * scobe
-                        else:
-                            products[-1].update({elem: max(1, int(n)) * scobe})
-                        elem, n = k, '0'
+                    else:
+                        elements[i], elem, n = update(elements[i], elem, n, scobe, k)
                 elif k.isalpha():
                     elem += k
                 elif k.isdigit():
                     n += k
-            if i == 0:
-                if elem in reactants[-1]:
-                    reactants[-1][elem] += max(1, int(n)) * scobe
-                else:
-                    reactants[-1].update({elem: max(1, int(n)) * scobe})
-            elif i == 1:
-                if elem in products[-1]:
-                    products[-1][elem] += max(1, int(n)) * scobe
-                else:
-                    products[-1].update({elem: max(1, int(n)) * scobe})
-    return reactants, products
+            elements[i], elem, n = update(elements[i], elem, n, scobe)
+    return elements
 
 
-def create_system():  # create system of equation
+def create_system(elements):  # create system of equation
     system, count = {}, 0
     for i in range(len(elements)):
         for j in range(len(elements[i])):
             for k in elements[i][j]:
                 if k in system:
-                    if i == 1:
-                        system[k] += f'-{chr(ord("a") + count)}*{elements[i][j][k]}'
-                    else:
-                        system[k] += f'+{chr(ord("a") + count)}*{elements[i][j][k]}'
+                    system[k] += \
+                        f'{chr(ord("+") + 2 * i)}{chr(ord("a") + count)}*{elements[i][j][k]}'
                 else:
-                    system[k] = ''
-                    for n in range(count):
-                        system[k] = f'{chr(ord("a") + n)}*0+'
-                    system[k] += f'{chr(ord("a") + count)}*{elements[i][j][k]}'
+                    system[k] = f'{chr(ord("a") + count - 1)}*0+' * bool(count) \
+                                + f'{chr(ord("a") + count)}*{elements[i][j][k]}'
             for k in system:
                 if chr(ord("a") + count) not in system[k]:
                     system[k] += f'+{chr(ord("a") + count)}*0'
@@ -75,7 +52,7 @@ def create_system():  # create system of equation
     return system
 
 
-def create_matrix():
+def create_matrix(system):
     mt = []
     for i in system:
         mt.append([])
@@ -87,10 +64,9 @@ def create_matrix():
     return mt
 
 
-def solve():
-    ind, stage, pos = ['' for _ in range(len(equation[0]) + len(equation[1]) - 1)] + [1], 0, []
+def solve(matrix):
+    ind, stage, pos, c = ['' for _ in range(len(matrix[0]) - 1)] + [1], 0, [], 0
     for i in range(len(matrix[0]) - 1):
-        c = None
         for j in range(len(matrix)):  # create main diagonal
             if matrix[j][stage] and j not in pos:
                 p = matrix[j][stage]
@@ -123,7 +99,7 @@ def solve():
     return ind
 
 
-def fin_equation():  # create final balanced equation
+def fin_equation(equation, elements, indices):  # create final balanced equation
     balanced_equation, c = '', 0
     for i in range(len(elements)):
         for j in range(len(elements[i])):
@@ -137,7 +113,6 @@ def fin_equation():  # create final balanced equation
 
 
 def balancer():  # create balanced equation
-    global equation, elements, indices, system, matrix
     ex = ['C + O2 = CO2',
           'H2 + O2 = H2O',
           'P4O10 + H2O = H3PO4',
@@ -153,11 +128,12 @@ def balancer():  # create balanced equation
             print('Invalid input')
             sys.exit()
         equation = [i.split(' + ') for i in eq.split(' = ')]
-        elements = analyze()  # Formatting equation into more convenient form
-        system = create_system()  # Create indices using a system of linear equations
-        matrix = create_matrix()
-        indices = solve()
-        result = fin_equation()  # Combine indices with the original equation
+        elements = analyze(equation)  # Formatting equation into more convenient form
+        system = create_system(elements)  # Create system of linear equations
+        matrix = create_matrix(system)  # Create matrix from system of linear equations
+        indices = solve(matrix)  # Get indices by solving the matrix
+        result = fin_equation(equation, elements,
+                              indices)  # Combine indices with the original equation
         print('-' * 12, eq, result, '-' * 12, sep='\n')
 
 
