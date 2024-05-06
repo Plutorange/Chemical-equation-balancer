@@ -19,8 +19,3 @@ H2, O2, CO2
 
 Example:
 Na3PO4 + MgCl2 = NaCl + Mg3(PO4)2
-
-
-
-
-made by Edvinas
