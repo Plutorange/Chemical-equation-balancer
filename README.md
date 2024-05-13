@@ -19,3 +19,8 @@ H2, O2, CO2
 
 Example:
 Na3PO4 + MgCl2 = NaCl + Mg3(PO4)2
+
+
+There is also a code to solve polynomial equations. You can see it in the file called equation_solver.py. You also need to install library matplotlib for it.
+
+You can also find file named One_for_All.py. If you run it you will see the menu in which you can choose which file to run out of equation_solver.py, main.py, and test2.py.
