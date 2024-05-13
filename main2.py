@@ -88,7 +88,7 @@ def solve(matrix):
                 break
     for i in ind:
         if type(i) == float and round(i, 4) % 1 != 0:
-            p = int(1 / round(i % 1, 4))
+            p = float(1 / (i % 1))
             for j in range(len(ind)):
                 ind[j] *= p
     for i in range(len(ind)):

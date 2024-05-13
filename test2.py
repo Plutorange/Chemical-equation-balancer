@@ -88,7 +88,7 @@ def solve(matrix):
                 break
     for i in ind:
         if type(i) == float and round(i, 4) % 1 != 0:
-            p = int(1 / round(i % 1, 4))
+            p = float(1 / (i % 1))
             for j in range(len(ind)):
                 ind[j] *= p
     for i in range(len(ind)):
@@ -122,7 +122,9 @@ def balancer():  # create balanced equation
           'PCl5 + H2O = H3PO4 + HCl',
           'CuCO3 + H2SO4 = CuSO4 + H2O + CO2',
           'Al2(SO4)3 + Ca(OH)2 = Al(OH)3 + CaSO4',
-          'CH3OH = CH3OCH3 + H2O']
+          'CH3OH = CH3OCH3 + H2O',
+          'Fe2O3 + C = Fe + CO2',
+          'NH3 + O2 = H2O + NO']
     for eq in ex:
         if ' = ' not in eq and ' + ' not in eq:
             print('Invalid input')
