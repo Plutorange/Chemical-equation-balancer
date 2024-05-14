@@ -43,8 +43,10 @@ def create_system(elements):  # create system of equation
                     system[k] += \
                         f'{chr(ord("+") + 2 * i)}{chr(ord("a") + count)}*{elements[i][j][k]}'
                 else:
-                    system[k] = f'{chr(ord("a") + count - 1)}*0+' * bool(count) \
-                                + f'{chr(ord("a") + count)}*{elements[i][j][k]}'
+                    system[k] = f'a*0+' * bool(count)
+                    for q in range(1, count):
+                        system[k] += f'{chr(ord("a") + q)}*0+'
+                    system[k] += f'{chr(ord("a") + count)}*{elements[i][j][k]}'
             for k in system:
                 if chr(ord("a") + count) not in system[k]:
                     system[k] += f'+{chr(ord("a") + count)}*0'
