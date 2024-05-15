@@ -67,29 +67,28 @@ def create_matrix(system):
 
 
 def solve(matrix):
-    ind, stage, pos, c = ['' for _ in range(len(matrix[0]) - 1)] + [1], 0, [], 0
+    ind, pos, c = ['' for _ in range(len(matrix[0]) - 1)] + [1], [], 0
     for i in range(len(matrix[0]) - 1):
         for j in range(len(matrix)):  # create main diagonal
-            if matrix[j][stage] and j not in pos:
-                p = matrix[j][stage]
+            if matrix[j][i] and j not in pos:
+                p = matrix[j][i]
                 for k in range(len(matrix[j])):
                     matrix[j][k] /= p
                 c = matrix[j]
                 pos.append(j)
                 break
         for j in range(len(matrix)):  # remove zeros below diagonal 1
-            if matrix[j][stage] and matrix[j] != c:
-                p = (0 - matrix[j][stage]) / c[stage]
+            if matrix[j][i] and matrix[j] != c:
+                p = (0 - matrix[j][i]) / c[i]
                 for k in range(len(matrix[j])):
                     matrix[j][k] += c[k] * p
-        stage += 1
-    for stage in range(len(ind) - 1):
-        for i in range(len(matrix)):
-            if matrix[i][stage]:
-                ind[stage] = matrix[i][-1]
+    for i in range(len(ind) - 1):
+        for j in range(len(matrix)):
+            if matrix[j][i]:
+                ind[i] = matrix[j][-1]
                 break
     for i in ind:
-        if type(i) == float and round(i, 4) % 1 != 0:
+        if round(i, 4) % 1 != 0:
             p = float(1 / (i % 1))
             for j in range(len(ind)):
                 ind[j] *= p
@@ -107,7 +106,7 @@ def fin_equation(equation, elements, indices):  # create final balanced equation
         for j in range(len(elements[i])):
             if i == 1 and j == 0:
                 balanced_equation += ' = '
-            if j != 0:
+            elif j != 0:
                 balanced_equation += ' + '
             balanced_equation += str(indices[c]) + equation[i][j]
             c += 1
