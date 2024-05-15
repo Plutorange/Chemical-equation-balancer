@@ -26,4 +26,4 @@ There is also a code to solve polynomial equations. You can see it in the file c
 You can also find file named One_for_All.py. If you run it you will see the menu in which you can choose which file to run out of equation_solver.py, main2.py, and test2.py.
 
 
-Made by Edvinas Norkus as a part of the project for the team number 10 which consists of Hleb Pleshchankou, Nikita Feoktistov, Edvinas Norkus, Tymofii Fomichov, Danylo Kovalenko, and Andrii Yevmenchuk.
+Made by Edvinas Norkus as a part of the project for the group 10 which consists of Hleb Pleshchankou, Nikita Feoktistov, Edvinas Norkus, Tymofii Fomichov, Danylo Kovalenko, and Andrii Yevmenchuk.
