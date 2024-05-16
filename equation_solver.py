@@ -14,15 +14,23 @@ def analyze(eq):
 
 
 def solve(equation):
-    print(sympy.solve(eval(equation)))
-    print(sympy.nroots(eval(equation)))
+    algebraic = sympy.solve(eval(equation))
+    numeric = sympy.nroots(eval(equation))
+    view = input('Do you want the answers in the algebraic or numeric form? ')
+    if view == 'algebraic':
+        return algebraic
+    elif view == 'numeric':
+        return numeric
+    else:
+        print('There is no such option, try again.')
+        view = input('Do you want the answers in the algebraic or numeric form? ')
 
 
 def solve_equation():
     eq = input('Please enter equation: ')
     equation = analyze(eq)
-    print(equation)
-    solve(equation)
+    answers = solve(equation)
+    [print(f'Root {i + 1}: {answers[i]}') for i in range(len(answers))]
 
 
 if __name__ == "__main__":
