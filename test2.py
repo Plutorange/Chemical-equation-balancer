@@ -1,4 +1,5 @@
 import sys
+
 import main2
 
 
@@ -14,7 +15,9 @@ def balancer():  # create balanced equation
           'Al2(SO4)3 + Ca(OH)2 = Al(OH)3 + CaSO4',
           'CH3OH = CH3OCH3 + H2O',
           'Fe2O3 + C = Fe + CO2',
-          'NH3 + O2 = H2O + NO']
+          'NH3 + O2 = H2O + NO',
+          'K4Fe(SCN)6 + K2Cr2O7 + H2SO4 = Fe2(SO4)3 + Cr2(SO4)3 + CO2 + H2O + K2SO4 + KNO3',
+          'Al + KOH + H2SO4 = H2 + KAl(SO4)2 + H2O']
     for eq in ex:
         if ' = ' not in eq and ' + ' not in eq:
             print('Invalid input')
